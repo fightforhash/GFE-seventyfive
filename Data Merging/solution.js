@@ -15,7 +15,7 @@ export default function mergeData(sessions) {
         } else {
             const cloudSession = {
                 ...session,
-                equipment: new Set(session.equipment);
+                equipment: new Set(session.equipment)
             };
             map.set(session.user, cloudSession);
             res.push(cloudSession);

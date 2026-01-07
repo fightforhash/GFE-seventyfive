@@ -1,37 +1,37 @@
-const SUBMIT_URL =
-  "https://questions.greatfrontend.com/api/questions/contact-form";
+import { useState } from "react";
+import submitForm from "./submitForm";
 
-export default async function submitForm(event) {
-  event.preventDefault();
-  const form = event.target;
+export default function App() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+  function handleChange(e) {
+    const { name, value } = e.target;
 
-  try {
-    if (form.action !== SUBMIT_URL) {
-      alert("Incorrect form action value");
-      return;
-    }
-
-    if (form.method.toLowerCase() !== "post") {
-      alert("Incorrect form method value");
-      return;
-    }
-
-    const formData = new FormData(form);
-    const response = await fetch(SUBMIT_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: formData.get("name"),
-        email: formData.get("email"),
-        message: formData.get("message"),
-      }),
+    setFormData({
+      ...formData,
+      [name]: value,
     });
-
-    const text = await response.text();
-    alert(text);
-  } catch (_) {
-    alert("Error submitting form!");
   }
+  return (
+    <form
+      // Ignore the onSubmit prop, it's used by GFE to
+      // intercept the form submit event to check your solution.
+      action="https://questions.greatfrontend.com/api/questions/contact-form"
+      method="post"
+      onSubmit={submitForm}
+    >
+      <input name="name" value={formData.name} onChange={handleChange} />
+      <input
+        name="email"
+        type="email"
+        value={formData.email}
+        onChange={handleChange}
+      />
+      <input name="message" value={formData.message} onChange={handleChange} />
+      <button>Send</button>
+    </form>
+  );
 }
